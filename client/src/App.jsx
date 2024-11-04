@@ -16,14 +16,15 @@ import ShoppingAccount from './pages/shopping-view/Account.jsx'
 import { useState } from 'react'
 import CheckAuth from './components/common/CheckAuth.jsx'
 import UnauthPage from './pages/unauth-page/UnauthPage.jsx'
+import { Button } from './components/ui/button.jsx'
 
 
 
 function App() {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(true)
-  const [user, setUser] = useState({role: 'admin'})
-  // const [user, setUser] = useState({role: 'user'})
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  // const [user, setUser] = useState({role: 'admin'})
+  const [user, setUser] = useState({role: 'user'})
 
   return (
     <div className='flex flex-col overflow-hidden bg-white'>
