@@ -7,3 +7,4 @@
 
 # Client
 - npm i @reduxjs/toolkit react-redux axios react-router-dom
+- Configure Routing, Layouts & Components
