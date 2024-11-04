@@ -1,3 +1,10 @@
+# High-Level Aim
+## Focus On Making A Great Real-World Ready Customizable ECommerce Platform
+- Launch a Store Website SAAS, Where Products Can Be Listed And Sold - Deploy It In Public
+- Clothes Designing Platform, Post Design And Earn When People Buy Your Design...
+- Similiar Handle & Customize Webiste For Other Ecom Related Stuff
+
+
 ## Notes
 
 # Server
