@@ -2,6 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 mongoose
     .connect(
@@ -32,7 +35,10 @@ app.use(cookieParser());
 app.use(express.json());
 
 
+import userRouter from './routes/user.route.js'
 
+
+app.use('/api/v1/user/', userRouter)
 
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
