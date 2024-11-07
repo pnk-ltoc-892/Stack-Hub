@@ -1,16 +1,40 @@
 import CommonForm from '@/components/common/CommonForm.jsx'
 import { loginFormControls } from '@/config/index.js'
+import { useToast } from '@/hooks/use-toast.js'
+import { loginUser } from '@/store/auth-slice/index.js'
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
+
 
 const Login = () => {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     })
+    const dispatch = useDispatch()
+    const { toast } = useToast()
 
-    function onSubmitHandler(){
-
+    async function onSubmitHandler(event){
+        event.preventDefault()
+        // const response = await dispatch(loginUser(formData))
+        // console.log(response);
+                
+        dispatch(loginUser(formData)).then( (data) => {
+            // console.log(data);
+            if(data?.payload?.success){
+                toast({
+                    title: data?.payload?.message
+                })
+                // navigate('/auth/login')
+            }
+            else{
+                toast({
+                    title: data?.payload?.message,
+                    variant: 'destructive'
+                })
+            }// Navigation ?? see it ki based on role, how it will change
+        } )
     }
 
     return (
@@ -36,7 +60,7 @@ const Login = () => {
                     setFormData={setFormData}
                     onSubmitHandler={onSubmitHandler}
                 />
-            </div>
+        </div>
     )
 }
 
