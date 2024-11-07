@@ -66,6 +66,12 @@ const authSlice = createSlice({
             state.user = null
             state.isAuthenticated = false
         })
+        // LogOut User
+        .addCase(logOutUser.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.user = null
+            state.isAuthenticated = false
+        })
     }
 })
 
@@ -100,6 +106,17 @@ export const checkAuth = createAsyncThunk('/auth/check-auth',  // Identifier
                 Expires: '0'
             }
         })
+        return response.data
+    }
+)
+// log-Out
+export const logOutUser = createAsyncThunk('/auth/logout', 
+    async () => {
+        const response = await axios.post('http://localhost:5000/api/v1/user/logout',
+            {},
+            {
+                withCredentials: true,
+            })
         return response.data
     }
 )
