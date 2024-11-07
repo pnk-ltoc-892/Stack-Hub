@@ -32,7 +32,7 @@ export const authMiddleware = async (req, res, next) => {
 
         // Check if token exists
         if (!token) {
-            return res.status(401).json({
+            return res.status(201).json({
                 success: false,
                 message: "Unauthorized user!",
             });
