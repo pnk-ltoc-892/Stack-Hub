@@ -7,7 +7,7 @@ import { Button } from '../ui/button.jsx';
 
 
 // ! Try To Further Simply This Form Element...
-const CommonForm = ({formControls, formData, setFormData, onSubmitHandler, buttonText}) => {
+const CommonForm = ({formControls, formData, setFormData, onSubmitHandler, buttonText, isBtnDisabled}) => {
     
     function renderInputsByComponentType(controllerItem){
         // To Be Finally Returned
@@ -102,7 +102,7 @@ const CommonForm = ({formControls, formData, setFormData, onSubmitHandler, butto
                     ) )
                 }
             </div>
-            <Button type='submit' className='mt-2 w-full'>{buttonText || 'Submit'}</Button>
+            <Button disabled={isBtnDisabled} type='submit' className='mt-2 w-full'>{buttonText || 'Submit'}</Button>
         </form>
     )
 }

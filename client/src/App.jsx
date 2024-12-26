@@ -25,14 +25,16 @@ import { Skeleton } from './components/ui/skeleton.jsx'
 function App() {
   const { isAuthenticated, user, isLoading } = useSelector(state => state.auth)
   // console.log({ isAuthenticated, user });
+  
   const dispatch = useDispatch()
 
-
-  // ! Checking For Authentication
+  // ! Checking For Authentication - On First Component Load (App.jsx)
   useEffect(() => {
-    dispatch(checkAuth()).then((data) => {
+    dispatch(checkAuth())
+
+    // dispatch(checkAuth()).then((data) => {
       // console.log(data);
-    })
+    // })
   }, [dispatch])
 
 
