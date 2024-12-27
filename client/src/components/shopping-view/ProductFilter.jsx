@@ -5,8 +5,9 @@ import { Checkbox } from "../ui/checkbox.jsx";
 import { Separator } from "../ui/separator.jsx";
 
 
+// ! Important Component
 const ProductFilter = ({ filters, handleFilter }) => {
-    
+
     return (
         <div className="bg-background rounded-lg shadow-sm">
             <div className="p-4 border-b">
