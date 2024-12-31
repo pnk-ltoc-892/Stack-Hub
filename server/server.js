@@ -46,14 +46,19 @@ app.use(express.json());
 import userRouter from './routes/user.routes.js'
 import adminProductsRouter from './routes/admin/products.routes.js'
 import shopProductsRouter from './routes/shop/products.routes.js'
+import shopCartRouter from './routes/shop/cart.routes.js'
+import shopAddressRouter from './routes/shop/address.routes.js'
 
 
 app.use('/api/v1/user/', userRouter)
 
 app.use('/api/v1/admin/products', adminProductsRouter)
 
-
 app.use('/api/v1/shop/products', shopProductsRouter)
+
+app.use('/api/v1/shop/cart', shopCartRouter)
+
+app.use('/api/v1/shop/address', shopAddressRouter)
 
 
 app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));

@@ -1,17 +1,70 @@
-import React from 'react'
-import { useDispatch } from 'react-redux';
-import { Dialog, DialogContent } from "../ui/dialog.jsx";
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../ui/button.jsx';
 import { Separator } from '../ui/separator.jsx';
 import { Avatar, AvatarFallback } from '../ui/avatar.jsx';
 import { Label } from '../ui/label.jsx';
 import { Input } from '../ui/input.jsx';
+import { Dialog, DialogContent } from "../ui/dialog.jsx";
+import { toast } from '@/hooks/use-toast.js';
+import { addToCart, fetchCartItems } from '@/store/shop/cart-slice/index.js';
+import { setProductDetails } from '@/store/shop/product-slice/index.js';
 
 
-export const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
+export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const [reviewMsg, setReviewMsg] = useState("");
     const [rating, setRating] = useState(0);
     const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+    const { cartItems } = useSelector((state) => state.shopCart);
+    // const { reviews } = useSelector((state) => state.shopReview);
+
+
+    function handleRatingChange(getRating) {
+        console.log(getRating, "getRating");
+        setRating(getRating);
+    }
+
+    const handleDialogClose = () => {
+        setOpen(false);
+        dispatch(setProductDetails());
+        setRating(0);
+        setReviewMsg("");
+    };
+
+    function handleAddToCart(getCurrentProductId, getTotalStock) {
+        let getCartItems = cartItems.items || [];
+
+        if (getCartItems.length) {
+            const indexOfCurrentItem = getCartItems.findIndex(
+                (item) => item.productId === getCurrentProductId
+            );
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                    toast({
+                        title: `Only ${getQuantity} quantity can be added for this item`,
+                        variant: "destructive",
+                    });
+                    return;
+                }
+            }
+        }
+        dispatch(
+            addToCart({
+                userId: user?.id,
+                productId: getCurrentProductId,
+                quantity: 1,
+            })
+        ).then((data) => {
+            if (data?.payload?.success) {
+                dispatch(fetchCartItems(user?.id));
+                toast({
+                    title: "Product is added to cart",
+                });
+            }
+        });
+    }
 
 
     return (
@@ -51,7 +104,7 @@ export const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
                             {/* <StarRatingComponent rating={averageReview} /> */}
                         </div>
                         <span className="text-muted-foreground">
-                            ({averageReview.toFixed(2)})
+                            {/* ({averageReview.toFixed(2)}) */}
                         </span>
                     </div>
                     <div className="mt-5 mb-5">
@@ -74,7 +127,7 @@ export const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
                         )}
                     </div>
                     <Separator />
-                    <div className="max-h-[300px] overflow-auto">
+                    {/* <div className="max-h-[300px] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">Reviews</h2>
                         <div className="grid gap-6">
                             {reviews && reviews.length > 0 ? (
@@ -123,7 +176,7 @@ export const ProductDetailDialog = ({ open, setOpen, productDetails }) => {
                                 Submit
                             </Button>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </DialogContent>
         </Dialog>

@@ -1,10 +1,12 @@
+import { ProductDetailsDialog } from '@/components/shopping-view/ProductDetailsDialog.jsx'
 import ProductFilter from '@/components/shopping-view/ProductFilter.jsx'
 import ProductTile from '@/components/shopping-view/ProductTile.jsx'
 import { Button } from '@/components/ui/button.jsx'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuTrigger, DropdownMenuRadioItem } from '@/components/ui/dropdown-menu.jsx'
 import { sortOptions } from '@/config/index.js'
 import { useToast } from '@/hooks/use-toast.js'
-import { fetchAllFilteredProducts } from '@/store/shop/product-slice/index.js'
+import { addToCart, fetchCartItems } from '@/store/shop/cart-slice/index.js'
+import { fetchAllFilteredProducts, fetchProductDetails } from '@/store/shop/product-slice/index.js'
 import { ArrowUpDownIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,12 +28,15 @@ function createSearchParamsHelper(filterParams) {
   return queryParams.join("&");
 }
 
+
+// ! How is the brand filter working
+
 const ShoppingListing = () => {
   const { productList, productDetails } = useSelector((state) => state.shopProducts);
   // console.log(productList);
   const dispatch = useDispatch();
 
-  // const { cartItems } = useSelector((state) => state.shopCart);
+  const { cartItems } = useSelector((state) => state.shopCart);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -43,10 +48,12 @@ const ShoppingListing = () => {
 
   const categorySearchParam = searchParams.get("category");
 
+
   function handleSort(value) {
     setSort(value);
   }
 
+  // ! Most Important Function - To Handle Sorting
   // ! Explore What Is Happening Here !
   // ! Adding Or Removing Filters, From Filters State Object
   const handleFilter = (getSectionId, getCurrentOption) => {
@@ -71,6 +78,33 @@ const ShoppingListing = () => {
     setFilters(copyFilters);
     // ! Storing Filters In Session Storage -> To Retain Filters On Page Reload
     sessionStorage.setItem('filters', JSON.stringify(copyFilters));
+  }
+
+
+  function handleGetProductDetails(getCurrentProductId) {
+    dispatch(fetchProductDetails(getCurrentProductId));
+  }
+
+
+  function handleAddtoCart(getProductId, getStock) {
+    // let getCartItems = 
+    // console.log(cartItems, "cartItems");
+    
+
+    dispatch(
+      addToCart({
+          userId: user?.id, 
+          productId: getProductId, 
+          quantity: 1
+        })
+    ).then( (data) => {
+      if(data?.payload?.success){
+        dispatch(fetchCartItems(user?.id));
+        toast({
+          title: "Product Added To Cart",
+        })
+      }
+    })
   }
 
 
@@ -99,10 +133,12 @@ const ShoppingListing = () => {
   // ! Finally Make a API Call To Fetch All Products - With Filter Parameters
   useEffect(() => {
     if (filters !== null && sort !== null) {
-      dispatch(fetchAllFilteredProducts({filterParams: filters, sortParams: sort}));
-      // console.log('fetching products', productList);
+      dispatch(fetchAllFilteredProducts({ filterParams: filters, sortParams: sort }));
     }
   }, [dispatch, sort, filters])
+
+
+  // * Work on indivual Product Dialog
 
 
   return (
@@ -154,9 +190,9 @@ const ShoppingListing = () => {
           {productList && productList.length > 0
             ? productList.map((productItem) => (
               <ProductTile
-                // handleGetProductDetails={handleGetProductDetails}
+                handleGetProductDetails={handleGetProductDetails}
                 product={productItem}
-              // handleAddtoCart={handleAddtoCart}
+                handleAddtoCart={handleAddtoCart}
               />
             ))
             : null}
@@ -165,11 +201,11 @@ const ShoppingListing = () => {
       </div>
 
       {/* // ! Product Details Dialog */}
-      {/* <ProductDetailsDialog
+      <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
-      /> */}
+      />
     </div>
   )
 }

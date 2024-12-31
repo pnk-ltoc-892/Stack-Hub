@@ -5,6 +5,7 @@ import { Button } from '../ui/button.jsx'
 import { brandOptionsMap, categoryOptionsMap } from "@/config/index.js";
 
 
+// ! Managing Product Details from parent component
 const ProductTile = ({
     product,
     handleGetProductDetails,
@@ -12,8 +13,7 @@ const ProductTile = ({
 }) => {
     return (
         <Card className="w-full max-w-sm mx-auto">
-            <div>
-            {/* <div onClick={() => handleGetProductDetails(product?._id)}> */}
+            <div onClick={() => handleGetProductDetails(product?._id)}>
                 <div className="relative">
                     <img
                         src={product?.image}
@@ -66,14 +66,14 @@ const ProductTile = ({
                     </Button>
                 ) : (
                     <Button
-                        // onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
+                        onClick={() => handleAddtoCart(product?._id, product?.totalStock)}
                         className="w-full"
                     >
                         Add to cart
                     </Button>
                 )}
             </CardFooter>
-        </Card>
+        </Card> 
     )
 }
 

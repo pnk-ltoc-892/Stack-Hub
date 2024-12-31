@@ -11,6 +11,9 @@ import { Avatar, AvatarFallback } from '../ui/avatar.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { logOutUser } from '@/store/auth-slice/index.js'
 import { toast } from '@/hooks/use-toast.js'
+import { fetchCartItems } from '@/store/shop/cart-slice/index.js'
+import { CartWrapper } from './CartWrapper.jsx'
+import { useEffect } from 'react'
 
 
 
@@ -21,7 +24,10 @@ function MenuItems() {
 
 
     const handleNavigate = (menuItem) => {
-        searchParams({ category: "pi" });
+        sessionStorage.removeItem("filters");
+        const currentFilter = menuItem.id !== 'home' ? {category: [menuItem.id]} :  null
+        sessionStorage.setItem("filters", JSON.stringify(currentFilter));
+        navigate(menuItem.path);
     }
 
     return (
@@ -43,10 +49,8 @@ function MenuItems() {
 
 
 function HeaderRightContent() {
-    const { user } = useSelector( state => state.auth );
-    // console.log(user);
-
-    // const { cartItems } = useSelector((state) => state.shopCart);
+    const { user } = useSelector(state => state.auth);
+    const { cartItems } = useSelector((state) => state.shopCart);
 
     const [openCartSheet, setOpenCartSheet] = useState(false);
     const navigate = useNavigate();
@@ -54,13 +58,17 @@ function HeaderRightContent() {
 
     const handleLogout = () => {
         dispatch(logOutUser(user?._id))
-        .then( () => {
-            toast({
-                title: "Logged out successfully",
+            .then(() => {
+                toast({
+                    title: "Logged out successfully",
+                })
             })
-        } )
     }
 
+    // ! Fetch Cart Items - On Component Remount
+    useEffect(() => {
+        dispatch(fetchCartItems(user?.id));
+    }, [dispatch]);
 
 
     return (
@@ -68,7 +76,7 @@ function HeaderRightContent() {
 
             {/* // ! Cart Sheet */}
             <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-                
+
                 {/* // Cart Trigger */}
                 <Button
                     onClick={() => setOpenCartSheet(true)}
@@ -77,27 +85,28 @@ function HeaderRightContent() {
                     className="relative"
                 >
                     <ShoppingCart className="w-6 h-6" />
-                    <span className="absolute top-[-5px] right-[2px] font-bold text-sm">
-                        {/* {cartItems?.items?.length || 0} */}
+                    <span className="absolute top-[-10px] right-[-10px] font-bold bg-slate-900 rounded-full p-[1px] text-sm">
+                        {cartItems?.items?.length || 0}
                     </span>
                     <span className="sr-only">User cart</span>
                 </Button>
-                {/* <UserCartWrapper
+                <CartWrapper
                     setOpenCartSheet={setOpenCartSheet}
                     cartItems={
                         cartItems && cartItems.items && cartItems.items.length > 0
                             ? cartItems.items
                             : []
                     }
-                /> */}
+                />
             </Sheet>
 
-             {/* // ! User Avatar */}
+            {/* // ! User Avatar */}
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="bg-black">
                         <AvatarFallback className="bg-black text-white font-extrabold">
-                            {user?.username[0].toUpperCase() || "P"}
+                            {/* {user?.username[0].toUpperCase() || "P"} */}
+                            "P"
                         </AvatarFallback>
                     </Avatar>
                 </DropdownMenuTrigger>
