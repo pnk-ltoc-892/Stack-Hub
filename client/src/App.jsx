@@ -19,6 +19,8 @@ import UnauthPage from './pages/unauth-page/UnauthPage.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuth } from './store/auth-slice/index.js'
 import { Skeleton } from './components/ui/skeleton.jsx'
+import PayPalReturn from './pages/shopping-view/PayPalReturn.jsx'
+import PaymentSuccess from './pages/shopping-view/PaymentSuccess.jsx'
 
 
 
@@ -108,6 +110,8 @@ function App() {
           <Route path='listing' element={<ShoppingListing />} />
           <Route path='checkout' element={<ShoppingCheckout />} />
           <Route path='account' element={<ShoppingAccount />} />
+          <Route path='paypal-return' element={<PayPalReturn />} />
+          <Route path='payment-success' element={<PaymentSuccess />} />
         </Route>
         <Route path='/unauth-page' element={<UnauthPage />} />
         <Route path='*' element={<NotFound />} />
