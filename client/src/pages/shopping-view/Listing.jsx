@@ -86,15 +86,31 @@ const ShoppingListing = () => {
   }
 
 
-  function handleAddtoCart(getProductId) {
+  function handleAddtoCart(getProductId, getTotalStock) {
+    let getCartItems = cartItems?.items || [];
+
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === getProductId);
+      if (indexOfCurrentItem > -1) {
+        const currentQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (currentQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${currentQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
+
     dispatch(
       addToCart({
-          userId: user?.id, 
-          productId: getProductId, 
-          quantity: 1
-        })
-    ).then( (data) => {
-      if(data?.payload?.success){
+        userId: user?.id,
+        productId: getProductId,
+        quantity: 1
+      })
+    ).then((data) => {
+      if (data?.payload?.success) {
         dispatch(fetchCartItems(user?.id));
         toast({
           title: "Product Added To Cart",
@@ -207,4 +223,4 @@ const ShoppingListing = () => {
   )
 }
 
-export default ShoppingListing
+export default ShoppingListing;

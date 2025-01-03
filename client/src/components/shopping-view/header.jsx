@@ -24,10 +24,25 @@ function MenuItems() {
 
 
     const handleNavigate = (menuItem) => {
+        // console.log(searchParams);        
         sessionStorage.removeItem("filters");
-        const currentFilter = menuItem.id !== 'home' ? {category: [menuItem.id]} :  null
+        const currentFilter = 
+            menuItem.id !== 'home' && 
+            menuItem.id !== 'search' && 
+            menuItem.id !== 'products'
+            ? {
+                category: [menuItem.id] // ! Created category Object
+                } 
+            : null
         sessionStorage.setItem("filters", JSON.stringify(currentFilter));
-        navigate(menuItem.path);
+        
+        // ! If the current location is listing page, then update the URLSearchParams - Manually as it needs reloading otherwise
+        if(location.pathname.includes('listing') && currentFilter !== null) {
+            setSearchParams(
+                new URLSearchParams(`?category=${menuItem.id}`)
+            )
+        }
+        else navigate(menuItem.path);
     }
 
     return (
