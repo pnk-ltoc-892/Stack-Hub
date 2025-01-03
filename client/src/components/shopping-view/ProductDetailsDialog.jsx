@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '../ui/button.jsx';
 import { Separator } from '../ui/separator.jsx';
@@ -9,6 +9,8 @@ import { Dialog, DialogContent } from "../ui/dialog.jsx";
 import { toast } from '@/hooks/use-toast.js';
 import { addToCart, fetchCartItems } from '@/store/shop/cart-slice/index.js';
 import { setProductDetails } from '@/store/shop/product-slice/index.js';
+import StarRating from '../common/StartRating.jsx';
+import { addReview, getReviews } from '@/store/shop/review-slice/index.js';
 
 
 export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
@@ -17,11 +19,11 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const { cartItems } = useSelector((state) => state.shopCart);
-    // const { reviews } = useSelector((state) => state.shopReview);
+    const { reviews } = useSelector((state) => state.shopReview);
 
 
     function handleRatingChange(getRating) {
-        console.log(getRating, "getRating");
+        // console.log(getRating, "getRating");
         setRating(getRating);
     }
 
@@ -66,6 +68,39 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         });
     }
 
+    function handleAddReview() {
+        dispatch(
+            addReview({
+                productId: productDetails?._id,
+                userId: user?.id,
+                userName: user?.userName,
+                reviewMessage: reviewMsg,
+                reviewValue: rating,
+            })
+        ).then((data) => {
+            if (data.payload.success) {
+                setRating(0);
+                setReviewMsg("");
+                dispatch(getReviews(productDetails?._id));
+                toast({
+                    title: "Review added successfully!",
+                });
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (productDetails !== null) dispatch(getReviews(productDetails?._id));
+    }, [productDetails]);
+
+    console.log(reviews, "reviews");
+
+    const averageReview =
+        reviews && reviews.length > 0
+            ? reviews.reduce((sum, reviewItem) => sum + reviewItem.reviewValue, 0) /
+            reviews.length
+            : 0;
+
 
     return (
         <Dialog open={open} onOpenChange={handleDialogClose}>
@@ -101,10 +136,10 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                     </div>
                     <div className="flex items-center gap-2 mt-2">
                         <div className="flex items-center gap-0.5">
-                            {/* <StarRatingComponent rating={averageReview} /> */}
+                            <StarRating rating={averageReview} />
                         </div>
                         <span className="text-muted-foreground">
-                            {/* ({averageReview.toFixed(2)}) */}
+                            ({averageReview.toFixed(2)})
                         </span>
                     </div>
                     <div className="mt-5 mb-5">
@@ -127,7 +162,7 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         )}
                     </div>
                     <Separator />
-                    {/* <div className="max-h-[300px] overflow-auto">
+                    <div className="max-h-[300px] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">Reviews</h2>
                         <div className="grid gap-6">
                             {reviews && reviews.length > 0 ? (
@@ -135,7 +170,8 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                     <div className="flex gap-4">
                                         <Avatar className="w-10 h-10 border">
                                             <AvatarFallback>
-                                                {reviewItem?.userName[0].toUpperCase()}
+                                                {/* {reviewItem?.username[0].toUpperCase()} */}
+                                                P
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="grid gap-1">
@@ -143,7 +179,7 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                                 <h3 className="font-bold">{reviewItem?.userName}</h3>
                                             </div>
                                             <div className="flex items-center gap-0.5">
-                                                <StarRatingComponent rating={reviewItem?.reviewValue} />
+                                                <StarRating rating={reviewItem?.reviewValue} />
                                             </div>
                                             <p className="text-muted-foreground">
                                                 {reviewItem.reviewMessage}
@@ -158,7 +194,7 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         <div className="mt-10 flex-col flex gap-2">
                             <Label>Write a review</Label>
                             <div className="flex gap-1">
-                                <StarRatingComponent
+                                <StarRating
                                     rating={rating}
                                     handleRatingChange={handleRatingChange}
                                 />
@@ -176,7 +212,7 @@ export const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                 Submit
                             </Button>
                         </div>
-                    </div> */}
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>

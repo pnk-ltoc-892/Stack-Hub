@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema } from "mongoose";
 
-const ProductReviewSchema = new mongoose.Schema(
+const productReviewSchema = new Schema(
   {
     productId: String,
     userId: String,
@@ -11,4 +11,4 @@ const ProductReviewSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ProductReview", ProductReviewSchema);
+export const ProductReview= mongoose.model("ProductReview", productReviewSchema);
