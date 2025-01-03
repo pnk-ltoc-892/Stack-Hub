@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
+import mongoose, { Schema } from "mongoose";
 
-const FeatureSchema = new mongoose.Schema(
+
+
+const FeatureSchema = new Schema(
   {
     image: String,
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Feature", FeatureSchema);
+export const Feature = mongoose.model("Feature", FeatureSchema);

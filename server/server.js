@@ -53,6 +53,7 @@ import shopAddressRouter from './routes/shop/address.routes.js'
 import shopOrderRouter from './routes/shop/order.routes.js'
 import shopSearchRouter from './routes/shop/search.routes.js'
 import shopReviewRouter from './routes/shop/review.routes.js'
+import commonFeatureRouter from './routes/common/feature.routes.js'
 
 
 app.use('/api/v1/user/', userRouter)
@@ -74,6 +75,8 @@ app.use('/api/v1/shop/order', shopOrderRouter)
 app.use('/api/v1/shop/search', shopSearchRouter)
 
 app.use('/api/v1/shop/review', shopReviewRouter)
+
+app.use("/api/v1/common/feature", commonFeatureRouter);
 
 
 app.get('/', async (req, res) => {

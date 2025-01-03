@@ -44,14 +44,14 @@ const brandsWithIcon = [
   { id: "zara", label: "Zara", icon: Images },
   { id: "h&m", label: "H&M", icon: Heater },
 ];
-const featureImageList = [bannerOne, bannerTwo, bannerThree];
+// const featureImageList = [bannerOne, bannerTwo, bannerThree];
 
 const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
   const { productList, productDetails } = useSelector((state) => state.shopProducts);
-  // const { featureImageList } = useSelector((state) => state.commonFeature);
+  const { featureImageList } = useSelector((state) => state.commonFeature);
 
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -129,8 +129,8 @@ const ShoppingHome = () => {
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
             <img
-              // src={slide?.image}
-              src={slide}
+              src={slide?.image}
+              // src={slide}
               key={index}
               className={`${index === currentSlide ? "opacity-100" : "opacity-0"
                 } absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`}
