@@ -8,6 +8,7 @@ import shopCartSlice from "./shop/cart-slice/index.js"
 import commonFeatureSlice from "./common-slice/index.js"
 import shopAddressSlice from "./shop/address-slice/index.js"
 import shopOrderSlice from "./shop/order-slice/index.js"
+import shopSearchSlice from "./shop/search-slice/index.js"
 
 
 
@@ -22,6 +23,7 @@ const store = configureStore({
         shopCart: shopCartSlice,
         shopAddress: shopAddressSlice,
         shopOrder: shopOrderSlice,
+        shopSearch: shopSearchSlice,
 
         commonFeature: commonFeatureSlice,
     }
