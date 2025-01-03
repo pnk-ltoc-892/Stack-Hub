@@ -14,6 +14,8 @@ const initialFormData = {
 }
 
 const OrderDetails = ({ orderDetails }) => {
+    // console.log(orderDetails, "orderDetails");
+    
     const [formData, setFormData] = useState(initialFormData);
 
     const { user } = useSelector((state) => state.auth);
@@ -41,9 +43,9 @@ const OrderDetails = ({ orderDetails }) => {
 
 
     return (
-        <DialogContent className="sm:max-w-[600px]">
-            <div className="grid gap-6">
-                <div className="grid gap-2">
+        <DialogContent className="sm:max-w-[600px] max-h-screen overflow-y-scroll">
+            <div className="grid gap-2">
+                <div className="grid gap-1">
                     <div className="flex mt-6 items-center justify-between">
                         <p className="font-medium">Order ID</p>
                         <Label>{orderDetails?._id}</Label>
@@ -100,7 +102,7 @@ const OrderDetails = ({ orderDetails }) => {
                 <div className="grid gap-4">
                     <div className="grid gap-2">
                         <div className="font-medium">Shipping Info</div>
-                        <div className="grid gap-0.5 text-muted-foreground">
+                        <div className="grid text-muted-foreground">
                             <span>{user.userName}</span>
                             <span>{orderDetails?.addressInfo?.address}</span>
                             <span>{orderDetails?.addressInfo?.city}</span>
@@ -113,7 +115,7 @@ const OrderDetails = ({ orderDetails }) => {
 
                 <div>
 
-                    // ! See This In Some Detail - for sake its simply rendering a select component
+                    {/* // ! See This In Some Detail - for sake its simply rendering a select component */}
                     <CommonForm
                         formControls={[
                             {
@@ -132,7 +134,7 @@ const OrderDetails = ({ orderDetails }) => {
                         formData={formData}
                         setFormData={setFormData}
                         buttonText={"Update Order Status"}
-                        onSubmit={handleUpdateStatus}
+                        onSubmitHandler={handleUpdateStatus}
                     />
                 </div>
             </div>

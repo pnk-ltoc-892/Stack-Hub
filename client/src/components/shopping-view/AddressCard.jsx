@@ -2,6 +2,7 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Label } from "../ui/label";
 
+
 function AddressCard({
     addressInfo,
     handleDeleteAddress,
@@ -16,12 +17,12 @@ function AddressCard({
                     ? () => setCurrentSelectedAddress(addressInfo)
                     : null
             }
-            className={`cursor-pointer border-red-700 ${selectedId?._id === addressInfo?._id
-                    ? "border-red-900 border-[4px]"
-                    : "border-black"
+            className={`bg-black/60 p-2 cursor-pointer ${selectedId?._id === addressInfo?._id
+                    ? "border-[2px] border-white" 
+                    : ""
                 }`}
         >
-            <CardContent className="grid p-4 gap-4">
+            <CardContent className="grid p-4 gap-2 text-lg">
                 <Label>Address: {addressInfo?.address}</Label>
                 <Label>City: {addressInfo?.city}</Label>
                 <Label>pincode: {addressInfo?.pincode}</Label>

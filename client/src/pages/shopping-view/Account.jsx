@@ -1,11 +1,13 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.jsx";
 import accImg from "../../assets/account.jpg";
-import React from 'react'
-import Address from "@/components/shopping-view/Address.jsx";
+import React, { useState } from 'react'
 import Orders from "@/components/shopping-view/Orders.jsx";
+import Address from "@/components/shopping-view/Address.jsx";
 
 
 const ShoppingAccount = () => {
+  const [selectedId, setCurrentSelectedAddress] = useState(null);
+
   return (
     <div className="flex flex-col">
       <div className="relative h-[300px] w-full overflow-hidden">
@@ -25,7 +27,10 @@ const ShoppingAccount = () => {
               <Orders />
             </TabsContent>
             <TabsContent value="address">
-              <Address />
+              <Address
+                selectedId={selectedId}
+                setCurrentSelectedAddress={setCurrentSelectedAddress}
+              />
             </TabsContent>
           </Tabs>
         </div>

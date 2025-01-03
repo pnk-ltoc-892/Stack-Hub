@@ -2,7 +2,7 @@ import CartItemsContent from '@/components/shopping-view/CartItemsContent.jsx'
 import img from '../../assets/account.jpg'
 import Address from '@/components/shopping-view/Address.jsx'
 import { Button } from '@/components/ui/button.jsx'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useToast } from '@/hooks/use-toast.js'
 import { createNewOrder } from '@/store/shop/order-slice/index.js'
@@ -18,8 +18,8 @@ const ShoppingCheckout = () => {
   const dispatch = useDispatch();
   const { toast } = useToast();
 
-  const totalCartAmount =
-    cartItems && cartItems.items && cartItems.items.length > 0
+  const totalCartAmount =  
+    (cartItems && cartItems.items && cartItems.items.length > 0
       ? cartItems.items.reduce(
         (sum, currentItem) =>
           sum +
@@ -29,11 +29,26 @@ const ShoppingCheckout = () => {
           currentItem?.quantity,
         0
       )
-      : 0;
+      : 0);
 
+  // const calculateAmount = () => 
+  //   (cartItems && cartItems.items && cartItems.items.length > 0
+  //     ? cartItems.items.reduce(
+  //       (sum, currentItem) =>
+  //         sum +
+  //         (currentItem?.salePrice > 0
+  //           ? currentItem?.salePrice
+  //           : currentItem?.price) *
+  //         currentItem?.quantity,
+  //       0
+  //     )
+  //     : 0);
+  // const [totalCartAmount, setTotalCartAmount] = useState(calculateAmount());
 
   function handleInitiatePaypalPayment() {
-    if (cartItems.length === 0) {
+    console.log(cartItems, "cartItems");
+    
+    if (cartItems.items.length === 0) {
       toast({
         title: "Your cart is empty. Please add items to proceed",
         variant: "destructive",
@@ -91,15 +106,18 @@ const ShoppingCheckout = () => {
     });
   }
 
-  // Explore This - do i have better way to do this ?
+  // ! Explore This - do i have better way to do this ?
   if (approvalURL) {
     window.location.href = approvalURL;
   }
 
+  // useEffect(() => {
+  //   setTotalCartAmount(calculateAmount());
+  // }, [cartItems]);
 
   return (
     <div className="flex flex-col">
-      <div className="relative h-[300px] w-full overflow-hidden">
+      <div className="relative h-[200px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-5 p-5">
@@ -110,7 +128,7 @@ const ShoppingCheckout = () => {
         <div className="flex flex-col gap-4 p-4 bg-gray-800 rounded-lg">
           {cartItems && cartItems.items && cartItems.items.length > 0
             ? cartItems.items.map((item) => (
-              <CartItemsContent cartItem={item} />
+              <CartItemsContent cartItem={item} key={item.productId}/>
             ))
             : null}
           <div className="mt-8 space-y-4">
@@ -119,8 +137,8 @@ const ShoppingCheckout = () => {
               <span className="font-bold">${totalCartAmount}</span>
             </div>
           </div>
-          <div className="mt-4 w-full">
 
+          <div className="mt-4 w-full">
             {/* // ! Disable Button While Loading Payement */}
             <Button onClick={handleInitiatePaypalPayment} className="w-full">
               {isPaymentStart

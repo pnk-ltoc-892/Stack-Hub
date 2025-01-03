@@ -7,7 +7,6 @@ const initialState = {
 };
 
 
-
 const addressSlice = createSlice({
     name: "address",
     initialState,
@@ -41,9 +40,11 @@ export const addNewAddress = createAsyncThunk(
     "/addresses/addNewAddress",
     async (formData) => {
         const response = await axios.post(
-            "http://localhost:5000/api/v1/shop/address/add",
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/shop/address/add`,
             formData
         );
+        console.log(response.data);
+        
         return response.data;
     }
 );
@@ -51,9 +52,13 @@ export const addNewAddress = createAsyncThunk(
 export const fetchAllAddresses = createAsyncThunk(
     "/addresses/fetchAllAddresses",
     async (userId) => {
+        console.log();
+        
         const response = await axios.get(
-            `http://localhost:5000/api/v1/shop/address/get/${userId}`
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/shop/address/get/${userId}`
         );
+        console.log("helo");
+        
         return response.data;
     }
 );
@@ -62,7 +67,7 @@ export const editAddress = createAsyncThunk(
     "/addresses/editaAddress",
     async ({ userId, addressId, formData }) => {
         const response = await axios.put(
-            `http://localhost:5000/api/v1/shop/address/update/${userId}/${addressId}`,
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/shop/address/update/${userId}/${addressId}`,
             formData
         );
         return response.data;
@@ -73,7 +78,7 @@ export const deleteAddress = createAsyncThunk(
     "/addresses/deleteAddress",
     async ({ userId, addressId }) => {
         const response = await axios.delete(
-            `http://localhost:5000/api/v1/shop/address/delete/${userId}/${addressId}`
+            `${import.meta.env.VITE_BACKEND_URL}/api/v1/shop/address/delete/${userId}/${addressId}`
         );
         return response.data;
     }

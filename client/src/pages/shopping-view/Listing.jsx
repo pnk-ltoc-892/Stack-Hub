@@ -86,11 +86,7 @@ const ShoppingListing = () => {
   }
 
 
-  function handleAddtoCart(getProductId, getStock) {
-    // let getCartItems = 
-    // console.log(cartItems, "cartItems");
-    
-
+  function handleAddtoCart(getProductId) {
     dispatch(
       addToCart({
           userId: user?.id, 
@@ -193,6 +189,7 @@ const ShoppingListing = () => {
                 handleGetProductDetails={handleGetProductDetails}
                 product={productItem}
                 handleAddtoCart={handleAddtoCart}
+                key={productItem._id}
               />
             ))
             : null}

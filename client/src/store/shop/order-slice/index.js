@@ -18,7 +18,6 @@ const shoppingOrderSlice = createSlice({
         resetOrderDetails: (state) => {
             state.orderDetails = null
         }
-
     },
     extraReducers: (builder) => {
         builder
@@ -67,9 +66,11 @@ const shoppingOrderSlice = createSlice({
 // Async Thunks
 export const createNewOrder = createAsyncThunk('/order/createMewOrder',
     async (orderData) => {
-        const response = await axios.post('http://localhost:5000/api/v1/shop/create',
+        const response = await axios.post('http://localhost:5000/api/v1/shop/order/create',
             orderData,
         );
+        console.log(response.data);
+        
         return response.data
     }
 )

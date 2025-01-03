@@ -1,6 +1,8 @@
 import { Cart } from "../../models/Cart.js";
 import { Product } from "../../models/Product.js";
 
+// TODO: Implement Some More Checks like, while Fectching Cart Items, Replace data with updated stock data and price
+// ! => This is why dynamic fetching is important, as the stock and price can change anytime Hence, cannot be kept fixed
 
 const addToCart = async (req, res) => {
     try {
@@ -43,9 +45,8 @@ const addToCart = async (req, res) => {
             success: true,
             data: cart,
         });
-
-
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -54,7 +55,7 @@ const addToCart = async (req, res) => {
     }
 }
 
-
+// ! can be made better
 const fetchCartItems = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -81,7 +82,6 @@ const fetchCartItems = async (req, res) => {
         const validItems = cart.items.filter(
             (productItem) => productItem.productId
         );
-
         if (validItems.length < cart.items.length) { // ! If any item is deleted by the admin, Save the updated cart
             cart.items = validItems;
             await cart.save();
@@ -104,7 +104,8 @@ const fetchCartItems = async (req, res) => {
                 items: populateCartItems,
             },
         });
-    } catch (error) {
+    }
+    catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
@@ -113,10 +114,11 @@ const fetchCartItems = async (req, res) => {
     }
 };
 
+// ! check if stock is available or not
 const updateCartItemQty = async (req, res) => {
     try {
         const { userId, productId, quantity } = req.body;
-        if (!userId || !productId || quantity <= 0) {
+        if (!userId || !productId || quantity === 0) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid data provided!",
@@ -158,16 +160,18 @@ const updateCartItemQty = async (req, res) => {
             success: true,
             data: cart,
         });
-    } catch (error) {
+    } 
+    catch (error) {
         console.log(error);
         res.status(500).json({
             success: false,
-            message: "Error Adding to Cart",
+            message: "Error Updating Quantity",
         });
     }
 }
 
 
+// ! seems like a lot of code, can be made better and seems like a lot of code repetition and ann neccessry code
 const deleteCartItem = async (req, res) => {
     try {
         const { userId, productId } = req.params;
@@ -182,7 +186,6 @@ const deleteCartItem = async (req, res) => {
             path: "items.productId",
             select: "image title price salePrice",
         });
-
         if (!cart) {
             return res.status(404).json({
                 success: false,

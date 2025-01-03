@@ -11,6 +11,7 @@ import {
 import AddressCard from "./AddressCard.jsx";
 import { useToast } from "@/hooks/use-toast.js";
 import { addressFormControls } from "@/config/index.js";
+import { Toast } from "../ui/toast.jsx";
 
 
 const initialAddressFormData = {
@@ -24,21 +25,24 @@ const initialAddressFormData = {
 function Address({ setCurrentSelectedAddress, selectedId }) {
     const [formData, setFormData] = useState(initialAddressFormData);
     const [currentEditedId, setCurrentEditedId] = useState(null);
+
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
     const { addressList } = useSelector((state) => state.shopAddress);
     const { toast } = useToast();
 
+
     function handleManageAddress(event) {
         event.preventDefault();
+        console.log("formData", formData);
+        
 
-        if (addressList.length >= 3 && currentEditedId === null) {
+        if (addressList.length >= 4 && currentEditedId === null) {
             setFormData(initialAddressFormData);
             toast({
-                title: "You can add max 3 addresses",
+                title: "You can add max 4 addresses",
                 variant: "destructive",
             });
-
             return;
         }
 
@@ -74,6 +78,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
                 }
             });
     }
+    
 
     function handleDeleteAddress(getCurrentAddress) {
         dispatch(
@@ -110,14 +115,13 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
         dispatch(fetchAllAddresses(user?.id));
     }, [dispatch]);
 
-    console.log(addressList, "addressList");
 
     return (
         <Card>
             <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
                 {addressList && addressList.length > 0
-                    ? addressList.map((singleAddressItem) => (
-                        <AddressCard
+                    ? addressList.map((singleAddressItem,index) => (
+                        <AddressCard key={index}
                             selectedId={selectedId}
                             handleDeleteAddress={handleDeleteAddress}
                             addressInfo={singleAddressItem}
@@ -138,7 +142,7 @@ function Address({ setCurrentSelectedAddress, selectedId }) {
                     formData={formData}
                     setFormData={setFormData}
                     buttonText={currentEditedId !== null ? "Edit" : "Add"}
-                    onSubmit={handleManageAddress}
+                    onSubmitHandler={handleManageAddress}
                     isBtnDisabled={!isFormValid()}
                 />
             </CardContent>

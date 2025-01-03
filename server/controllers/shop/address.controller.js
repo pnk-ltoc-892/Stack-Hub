@@ -43,7 +43,6 @@ const fetchAllAddress = async (req, res) => {
                 message: "User id is required!",
             });
         }
-
         const addressList = await Address.find({ userId });
 
         res.status(200).json({

@@ -39,6 +39,8 @@ function App() {
     // })
   }, [dispatch])
 
+  // console.log(import.meta.env.VITE_BACKEND_URL);
+  
 
   // useEffect(() => {
   //   {

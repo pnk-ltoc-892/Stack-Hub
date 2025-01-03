@@ -3,7 +3,7 @@ import React from 'react'
 import { Button } from '../ui/button.jsx'
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@/hooks/use-toast.js';
-import { deleteCartItem, updateCartQuantity } from '@/store/shop/cart-slice/index.js';
+import { deleteCartItem, fetchCartItems, updateCartQuantity } from '@/store/shop/cart-slice/index.js';
 
 
 const CartItemsContent = ({ cartItem }) => {
@@ -16,6 +16,7 @@ const CartItemsContent = ({ cartItem }) => {
 
     // ! Explore What Is Happening Here !
     function handleUpdateQuantity(getCartItem, typeOfAction) {
+        // ! Checking Stock Quantity
         if (typeOfAction == "plus") {
             let getCartItems = cartItems.items || [];
 
@@ -28,8 +29,6 @@ const CartItemsContent = ({ cartItem }) => {
                     (product) => product._id === getCartItem?.productId
                 );
                 const getTotalStock = productList[getCurrentProductIndex].totalStock;
-
-                // console.log(getCurrentProductIndex, getTotalStock, "getTotalStock");
 
                 if (indexOfCurrentCartItem > -1) {
                     const getQuantity = getCartItems[indexOfCurrentCartItem].quantity;
@@ -51,8 +50,8 @@ const CartItemsContent = ({ cartItem }) => {
                 productId: getCartItem?.productId,
                 quantity:
                     typeOfAction === "plus"
-                        ? getCartItem?.quantity + 1
-                        : getCartItem?.quantity - 1,
+                        ? 1
+                        : -1,
             })
         ).then((data) => {
             if (data?.payload?.success) {

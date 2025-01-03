@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OrderDetails from "@/components/admin-view/OrderDetails.jsx";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card.jsx";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table.jsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.jsx";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table.jsx";
 import { Badge } from "@/components/ui/badge.jsx";
 import { Dialog } from "@/components/ui/dialog.jsx";
 import { Button } from "@/components/ui/button.jsx";
-import { resetOrderDetails } from "@/store/admin/order-slice/index.js";
+import { getAllOrdersForAdmin, getOrderDetailsForAdmin, resetOrderDetails } from "@/store/admin/order-slice/index.js";
 
 
 
@@ -14,6 +14,7 @@ function AdminOrders() {
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     const { orderList, orderDetails } = useSelector((state) => state.adminOrder);
     const dispatch = useDispatch();
+
 
     function handleFetchOrderDetails(getId) {
         dispatch(getOrderDetailsForAdmin(getId));
@@ -51,7 +52,7 @@ function AdminOrders() {
                         <TableBody>
                             {orderList && orderList.length > 0
                                 ? orderList.map((orderItem) => (
-                                    <TableRow>
+                                    <TableRow key={orderItem?._id}>
                                         <TableCell>{orderItem?._id}</TableCell>
                                         <TableCell>{orderItem?.orderDate.split("T")[0]}</TableCell>
                                         <TableCell>
@@ -77,9 +78,7 @@ function AdminOrders() {
                                                 }}
                                             >
                                                 <Button
-                                                    onClick={() =>
-                                                        handleFetchOrderDetails(orderItem?._id)
-                                                    }
+                                                    onClick={() => handleFetchOrderDetails(orderItem?._id)}
                                                 >
                                                     View Details
                                                 </Button>

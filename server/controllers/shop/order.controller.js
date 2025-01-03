@@ -1,4 +1,5 @@
 import { Order } from "../../models/Order.js";
+import { Cart } from "../../models/Cart.js";
 import { Product } from "../../models/Product.js";
 
 
@@ -61,35 +62,38 @@ const createOrder = async (req, res) => {
                 message: "Error while creating paypal payment",
             });
         }
-        else {
-            const newlyCreatedOrder = new Order({
-                userId,
-                cartId,
-                cartItems,
-                addressInfo,
-                orderStatus,
-                paymentMethod,
-                paymentStatus,
-                totalAmount,
-                orderDate,
-                orderUpdateDate,
-                paymentId,
-                payerId,
-            });
-            await newlyCreatedOrder.save();
 
-            // const approvalURL = paymentInfo.links.find(
-            //     (link) => link.rel === "approval_url"
-            // ).href;
+        const newlyCreatedOrder = new Order({
+            userId,
+            cartId,
+            cartItems,
+            addressInfo,
+            orderStatus,
+            paymentMethod,
+            paymentStatus,
+            totalAmount,
+            orderDate,
+            orderUpdateDate,
+            paymentId,
+            payerId,
+        });
+        await newlyCreatedOrder.save();
 
-            const approvalURL = "pay-success.com"
+        // const approvalURL = paymentInfo.links.find(
+        //     (link) => link.rel === "approval_url"
+        // ).href;
 
-            res.status(201).json({
-                success: true,
-                approvalURL,
-                orderId: newlyCreatedOrder._id,
-            });
-        }
+        // const approvalURL = "pay-success.com"
+        const approvalURL = "http://localhost:5173/shop/paypal-return"
+
+        res.status(201).json({
+            success: true,
+            approvalURL,
+            orderId: newlyCreatedOrder._id,
+            json: create_payment_json,
+            data: newlyCreatedOrder,
+        });
+
         // });
 
     } catch (e) {
@@ -161,7 +165,7 @@ const getAllOrdersByUser = async (req, res) => {
         const orders = await Order.find({ userId });
 
         if (!orders.length) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: false,
                 message: "No orders found!",
             });
